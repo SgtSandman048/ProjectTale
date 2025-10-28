@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import jdk.jfr.Event;
 
 public class EventHandler {
-    GamePanel gp;
+   /*/ GamePanel gp;
     Rectangle eventRect;
     int eventRectDefaultX, eventRectDefaultY;
     public EventHandler(GamePanel gp){
@@ -21,5 +21,6 @@ public class EventHandler {
 
     public void checkEvent(){
         if(hit(27,16,"right"))
-    }
+    }*/
 }
+// We do not use this one

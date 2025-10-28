@@ -5,9 +5,9 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
-public class Janitor extends Entity {
+public class Janitor_NPC extends Entity {
 
-    public Janitor(GamePanel gp){
+    public Janitor_NPC(GamePanel gp){
         super(gp);
 
         direction = "down";
@@ -15,7 +15,7 @@ public class Janitor extends Entity {
 
         name = "Janitor";
         maxHp = 20;
-        isHostile = true;
+        isHostile = false;
 
         getImage();
         setDialogue();

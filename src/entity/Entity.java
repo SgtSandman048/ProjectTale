@@ -7,15 +7,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.UtilityTool;
-import object.SuperObject;
 
 public abstract class Entity {
     GamePanel gp;
     public int worldX, worldY;
     public int speed;
 
-    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-    public String direction;
+    public boolean collision = false;
+
+    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2, spriteEnemy;
+    public String direction = "down";
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
@@ -25,9 +26,9 @@ public abstract class Entity {
     public boolean collsionOn = false;
     public int actionLockCounter = 0;
     
-    // GEMINI: Attribute
+    // Attribute
     public String name;
-    // public int Hp; May not use this.
+    public int Hp;
     public int maxHp;
     public int strength;
     public int attack;
@@ -36,11 +37,19 @@ public abstract class Entity {
     public int exp;
     public int nextLevelExp;
     public boolean isHostile = false;
-    public SuperObject currentWeapon;
-    public SuperObject currentShield;
+    public Entity currentWeapon;
+    public Entity currentShield;
+
+    // Item Attribute
+    public int attackValue;
+    public int defenseValue;
+    public int healValue;
+    public boolean isUsableInBattle;
+    public String description = "";
 
     String[] dialogue = new String[20];
-    int dialogueIndex = 0;
+    public int dialogueSet = 0;
+    public int dialogueIndex = 0;
 
     public Entity(GamePanel gp){
         this.gp = gp;

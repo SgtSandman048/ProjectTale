@@ -1,22 +1,17 @@
 package object;
 
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import entity.Entity;
 import main.GamePanel;
 
-public class OBJ_Knife extends SuperObject{
-    GamePanel gp;
+public class OBJ_Knife extends Entity{
     public OBJ_Knife(GamePanel gp){
-        this.gp = gp;
+        super(gp);
 
         name = "Knife";
-        int attackValue = 1;
+        down1 = setup("/objects/knife");
 
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/assets/objects/key.png"));
-            utool.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch (IOException e) { e.printStackTrace(); }
-        collision = true;
-        solidArea.x = 5;
+        attackValue = 5;
+        isUsableInBattle = false;
+        description = "[" + name + "]\n+5 Damage\nDuh, the 'Janitor's gift' I guess?";
     }
 }

@@ -16,31 +16,31 @@ public class AttackSpawner {
     }
 
     public void spawnAimed(PlayerHeart player, List<Bullet> bullets, Random rand, Rectangle box) {
-        if (rand.nextInt(15) == 0) { // ประมาณ 0.25 วิ (ที่ 60fps)
+        if (rand.nextInt(15) == 0) {
             double dx = player.x - (box.x + box.width / 2);
-            double dy = player.y - box.y; // เริ่มจากกลางบนของกล่อง
+            double dy = player.y - box.y;
             double len = Math.sqrt(dx * dx + dy * dy);
-            double vx = dx / len * 3; // ความเร็ว 3
+            double vx = dx / len * 3;
             double vy = dy / len * 3;
             bullets.add(new Bullet(box.x + box.width / 2, box.y, vx, vy, 8, 1, Color.MAGENTA));
         }
     }
 
     public void spawnRain(List<Bullet> bullets, Random rand, Rectangle box) {
-        if (rand.nextInt(10) < 3) { // 30%
-            int x = box.x + rand.nextInt(box.width); // สุ่มตำแหน่ง X ในกรอบ
+        if (rand.nextInt(10) < 3) {
+            int x = box.x + rand.nextInt(box.width);
             bullets.add(new Bullet(x, box.y, 0, 2 + rand.nextDouble() * 2, 6, 1, Color.YELLOW));
         }
     }
 
     public void spawnWall(List<Bullet> bullets, Random rand, Rectangle box) {
-        if (interval == 30) { // ประมาณ 0.5 วิ (ที่ 60fps)
-            int gapY = rand.nextInt(box.height - 40) + box.y + 30; // สุ่มตำแหน่งช่องว่าง
-            int gapSize = 40; // ขนาดช่องว่าง 30px
+        if (interval == 30) {
+            int gapY = rand.nextInt(box.height - 40) + box.y + 30;
+            int gapSize = 40;
             
-            for (int y = box.y; y < box.y + box.height; y += 10) { // สร้างกระสุนทุก 10px
+            for (int y = box.y; y < box.y + box.height; y += 10) {
                 if (y < gapY || y > gapY + gapSize) { 
-                    bullets.add(new Bullet(box.x, y, 3, 0, 10, 1, Color.CYAN)); // ยิงจากซ้ายไปขวา
+                    bullets.add(new Bullet(box.x, y, 3, 0, 10, 1, Color.CYAN));
                 }
             }
             interval = 0;
@@ -50,73 +50,66 @@ public class AttackSpawner {
 
     public void spawnCrossfire(List<Bullet> bullets, Random rand, Rectangle box) {
         if (rand.nextInt(5) == 0) {
-            // จากมุมบนซ้าย
             bullets.add(new Bullet(box.x, box.y, 2, 1.5, 14, 1, Color.ORANGE));
-            // จากมุมบนขวา
             bullets.add(new Bullet(box.x + box.width - 7, box.y, -2, 1.5, 14, 1, Color.ORANGE));
         }
     }
 
     public void spawnSpiral(List<Bullet> bullets, Random rand, Rectangle box) {
-        // อัปเดตมุม (เก็บค่าไว้ใน spiralAngle)
-        spiralAngle += 0.25; // ความเร็วในการหมุน
+        spiralAngle += 0.25;
 
-        // ยิงถี่ๆ
         if (rand.nextInt(2) == 0) {
             double spawnX = box.x + box.width / 2;
             double spawnY = box.y + box.height / 2;
 
-            // คำนวณความเร็ว (ทิศทาง)
             double vx = Math.cos(spiralAngle) * 2;
             double vy = Math.sin(spiralAngle) * 2;
 
-            // สร้าง 2 เส้น วิ่งสวนทางกัน
             bullets.add(new Bullet(spawnX, spawnY, vx, vy, 7, 1, Color.GREEN));
             bullets.add(new Bullet(spawnX, spawnY, -vx, -vy, 7, 1, Color.GREEN));
         }
     }
 
     public void spawnFountain(List<Bullet> bullets, Random rand, Rectangle box) {
-        if (rand.nextInt(5) == 0) { // ความถี่ในการยิง
-            double spawnX = box.x + box.width / 2 + (rand.nextDouble() - 0.5) * 20; // สุ่มเล็กน้อยรอบๆ กลางล่าง
-            double spawnY = box.y + box.height - 10; // ฐานของกล่อง
+        if (rand.nextInt(5) == 0) {
+            double spawnX = box.x + box.width / 2 + (rand.nextDouble() - 0.5) * 20;
+            double spawnY = box.y + box.height - 10;
 
-            double vx = (rand.nextDouble() - 0.5) * 3; // สเปรย์ออกซ้าย/ขวา
-            double vy = -rand.nextDouble() * 2 - 2; // พุ่งขึ้น (ความเร็วสุ่ม)
+            double vx = (rand.nextDouble() - 0.5) * 3;
+            double vy = -rand.nextDouble() * 2 - 2;
 
-            bullets.add(new Bullet(spawnX, spawnY, vx, vy, 8, 1, new Color(100, 100, 255))); // สีน้ำเงิน
+            bullets.add(new Bullet(spawnX, spawnY, vx, vy, 8, 1, new Color(100, 100, 255)));
         }
     }
     public void spawnInwardWalls(List<Bullet> bullets, Random rand, Rectangle box) {
-        wallSpawnCounter++; // นับเฟรม
+        wallSpawnCounter++;
 
-        // ยิงกำแพงใหม่ทุก 0.75 วินาที
         if (wallSpawnCounter % 45 == 0) { 
-            int side = (wallSpawnCounter / 45) % 4; // 0=ซ้าย, 1=ขวา, 2=บน, 3=ล่าง
-            int gapSize = 35; // ขนาดช่องว่าง
+            int side = (wallSpawnCounter / 45) % 4;
+            int gapSize = 35;
             
-            if (side == 0) { // --- ผนังซ้าย (ไปขวา) ---
+            if (side == 0) {
                 int gapY = box.y + rand.nextInt(box.height - gapSize);
                 for (int y = box.y; y < box.y + box.height; y += 10) {
                     if (y < gapY || y > gapY + gapSize) {
                         bullets.add(new Bullet(box.x, y, 1.5, 0, 10, 1, Color.WHITE));
                     }
                 }
-            } else if (side == 1) { // --- ผนังขวา (ไปซ้าย) ---
+            } else if (side == 1) {
                 int gapY = box.y + rand.nextInt(box.height - gapSize);
                 for (int y = box.y; y < box.y + box.height; y += 10) {
                     if (y < gapY || y > gapY + gapSize) {
                         bullets.add(new Bullet(box.x + box.width - 10, y, -1.5, 0, 10, 1, Color.WHITE));
                     }
                 }
-            } else if (side == 2) { // --- ผนังบน (ไปล่าง) ---
+            } else if (side == 2) {
                 int gapX = box.x + rand.nextInt(box.width - gapSize);
                 for (int x = box.x; x < box.x + box.width; x += 10) {
                     if (x < gapX || x > gapX + gapSize) {
                         bullets.add(new Bullet(x, box.y, 0, 1.5, 10, 1, Color.WHITE));
                     }
                 }
-            } else { // --- ผนังล่าง (ไปบน) ---
+            } else {
                 int gapX = box.x + rand.nextInt(box.width - gapSize);
                 for (int x = box.x; x < box.x + box.width; x += 10) {
                     if (x < gapX || x > gapX + gapSize) {

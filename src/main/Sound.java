@@ -1,12 +1,11 @@
 package main;
 
-
 import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-
+// No time to implement
 public class Sound {
     Clip clip;
     URL soundURL[] = new URL[30];

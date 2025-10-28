@@ -7,8 +7,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.JPanel;
-import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -34,8 +36,8 @@ public class GamePanel extends JPanel implements Runnable {
     // System
     public TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
-    Sound sfx = new Sound();
-    Sound music = new Sound();
+    //Sound sfx = new Sound();      // No time to implement sound
+    //Sound music = new Sound();
     Thread gameThread;
     public Collision cChecker = new Collision(this);
     public AssetSetter aSetter = new AssetSetter(this);
@@ -43,8 +45,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Entity and Object
     public Player player = new Player(this,keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public Entity obj[] = new Entity[10];
     public Entity npc[] = new Entity[10];
+    public ArrayList<Entity> entityList = new ArrayList();
     
     // Battle Manager
     public BattleManager battleManager = new BattleManager(this);
@@ -69,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-
+    
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
@@ -148,16 +151,35 @@ public class GamePanel extends JPanel implements Runnable {
             // Tile
             tileM.draw(g2);
 
-            // Object
+            // Entity
+            entityList.add(player);
+
+            for(int i=0; i<npc.length; i++){
+                if(npc[i] != null){
+                    entityList.add(npc[i]);
+                }
+            }
             for(int i=0; i<obj.length; i++){
                 if(obj[i] != null){
-                    obj[i].draw(g2, this);
+                    entityList.add(obj[i]);
                 }
             }
 
-            // NPC
-            for(int i=0; i<npc.length; i++){
-                if(npc[i] != null) npc[i].draw(g2);
+            // Sort
+            Collections.sort(entityList, new Comparator<Entity>(){
+                @Override
+                public int compare(Entity e1, Entity e2){
+                    int result = Integer.compare(e1.worldY, e2.worldY);
+                    return result;
+                }
+            });
+            // Draw Entity
+            for(int i=0; i<entityList.size(); i++){
+                entityList.get(i).draw(g2);
+            }
+            // Empty Entity List
+            for(int i=0; i<entityList.size(); i++){
+                entityList.remove(i);
             }
 
             // Player
@@ -172,7 +194,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     // Music
-    public void playMusic(int i){
+    /*public void playMusic(int i){
         music.setFile(i);
         music.play();
         music.loop();
@@ -183,15 +205,14 @@ public class GamePanel extends JPanel implements Runnable {
     public void playSE(int i){
         sfx.setFile(i);
         sfx.play();
-    }
+    }*/
 
-    // GEMINI: startBattle()
+    // Start Battle
     public void startBattle(Entity enemy) {
-        // อาจจะหยุดเพลง overworld และเล่นเพลงต่อสู้
         // stopMusic();
         // playMusic(battleMusicIndex);
         
-        battleManager.setupBattle(enemy); // ส่ง Entity ของศัตรูไป
+        battleManager.setupBattle(enemy);
         gameState = battleState;
         inCombat = true;
     }

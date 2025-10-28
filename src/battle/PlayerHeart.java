@@ -12,7 +12,7 @@ public class PlayerHeart {
     int size = 16;
     int speed = 4;
     public int maxHp;
-    public int hp = maxHp; // ใช้ public เพื่อให้ BattleManager ตั้งค่าได้
+    public int hp;
 
     public PlayerHeart(double x, double y) {
         this.x = x; 
@@ -22,7 +22,7 @@ public class PlayerHeart {
     public void update(int boxX, int boxY, int boxW, int boxH) {
         x += dx;
         y += dy;
-        // จำกัดพื้นที่การเคลื่อนที่
+        
         if (x < boxX) x = boxX;
         if (y < boxY) y = boxY;
         if (x + size > boxX + boxW) x = boxX + boxW - size;

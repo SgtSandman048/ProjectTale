@@ -1,7 +1,8 @@
 package entity;
 
+import java.io.IOException;
 import java.util.Random;
-
+import javax.imageio.ImageIO;
 import main.GamePanel;
 
 public class ProfessorGunner extends Entity{
@@ -11,15 +12,15 @@ public class ProfessorGunner extends Entity{
         direction = "down";
         speed = 1;
 
-        // GEMINI: Status
-        name = "Professor Kung";
+        // Status
+        name = "Professor Gunner";
         maxHp = 100;
         isHostile = true;
 
         getImage();
         setDialogue();
     }
-    public void getImage(){     // I still haven't draw it out yet :(
+    public void getImage(){ 
         up1 = setup("/npc/npc");
         up2 = setup("/npc/npc");
         down1 = setup("/npc/npc");
@@ -28,6 +29,12 @@ public class ProfessorGunner extends Entity{
         left2 = setup("/npc/npc");
         right1 = setup("/npc/npc");
         right2 = setup("/npc/npc");
+
+        try {
+            spriteEnemy = ImageIO.read(getClass().getResourceAsStream("/assets/npc/professor1.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setDialogue(){

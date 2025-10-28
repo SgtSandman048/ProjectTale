@@ -3,9 +3,13 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Book;
+import object.OBJ_Coffee;
 import object.OBJ_Knife;
+import object.OBJ_Money;
 
 public class Player extends Entity{
     KeyHandler keyH;
@@ -14,6 +18,8 @@ public class Player extends Entity{
     public final int screenY;
 
     public int npcIndex;
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int inventorySize = 10;
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -35,6 +41,7 @@ public class Player extends Entity{
 
         setDefaultValues();
         getPlayerImage();
+        setItem();
     }
     public void setDefaultValues(){
         worldX = gp.tileSize * 23;
@@ -45,6 +52,7 @@ public class Player extends Entity{
         // Player Status
         level = 1;
         maxHp = 20;
+        Hp = maxHp;
         strength = 2;
         exp = 0;
         nextLevelExp = 5;
@@ -53,8 +61,15 @@ public class Player extends Entity{
         attack = getAttack();
         defense = getDefense();
     }
+    public void setItem(){
+        inventory.add(currentWeapon);
+        inventory.add(new OBJ_Book(gp));
+        inventory.add(new OBJ_Money(gp));
+        inventory.add(new OBJ_Coffee(gp));
+    }
     public int getAttack(){
-        return attack = strength * currentWeapon.attackValue;
+        if (currentWeapon != null) return strength * currentWeapon.attackValue;
+        return strength;
     }
     public int getDefense(){
         if (currentShield != null) return defense * currentShield.defenseValue;
@@ -123,6 +138,25 @@ public class Player extends Entity{
         if(i != 999){
            
         }
+    }
+
+    public void updateAttack(){
+        attack = getAttack();
+    }
+
+    public void gainXp(int xpGot){
+        exp += xpGot;
+        while(exp >= nextLevelExp){
+            levelUp();
+            updateAttack();
+        }
+    }
+
+    public void levelUp(){
+        level++; exp -=nextLevelExp;
+        nextLevelExp *= 2;
+        maxHp += 2;
+        strength++;
     }
 
     public void interactNPC(int i){

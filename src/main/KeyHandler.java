@@ -20,7 +20,7 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-
+        
         // Menu State
         if(gp.gameState == gp.menuState){
             if(code == KeyEvent.VK_W && gp.ui.cmdNum > 0){
@@ -34,18 +34,23 @@ public class KeyHandler implements KeyListener {
                     gp.gameState = gp.playState;
                     //gp.playMusic(0);
                 }
-                if(gp.ui.cmdNum == 1){
+                if(gp.ui.cmdNum == 1){  // Load Game
                     
                 }
-                if(gp.ui.cmdNum == 2){
-
+                if(gp.ui.cmdNum == 2){  // Control
+                    gp.gameState = gp.optionsState;
                 }
                 if(gp.ui.cmdNum == 3){
                     System.exit(0);
                 }
             }
         }
-
+        // Options State
+        if(gp.gameState == gp.optionsState){
+            if(code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE){
+                gp.gameState = gp.menuState;
+            }
+        }
         // Play State
         if(gp.gameState == gp.playState || gp.battleManager.state == gp.battleManager.state.DODGING){
            if(code == KeyEvent.VK_W){
@@ -60,7 +65,7 @@ public class KeyHandler implements KeyListener {
             if(code == KeyEvent.VK_D){
                 rightPressed = true;
             }
-            if(code == KeyEvent.VK_TAB){
+            if(code == KeyEvent.VK_C){
                 if (gp.gameState != gp.battleState){
                     gp.gameState = gp.characterState;
                 }
@@ -114,8 +119,20 @@ public class KeyHandler implements KeyListener {
 
         // Character State
         else if(gp.gameState == gp.characterState){
-            if(code == KeyEvent.VK_TAB || code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_P){
+            if(code == KeyEvent.VK_C || code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_P){
                 gp.gameState = gp.playState;
+            }
+            if(code == KeyEvent.VK_W && gp.ui.slotRow != 0){
+                gp.ui.slotRow--;
+            }
+            if(code == KeyEvent.VK_S && gp.ui.slotRow != 1){
+                gp.ui.slotRow++;
+            }
+            if(code == KeyEvent.VK_A && gp.ui.slotCol != 0){
+                gp.ui.slotCol--;
+            }
+            if(code == KeyEvent.VK_D && gp.ui.slotCol != 4){
+                gp.ui.slotCol++;
             }
         }
 
@@ -123,6 +140,7 @@ public class KeyHandler implements KeyListener {
         else if(gp.gameState == gp.battleState) {
             gp.battleManager.handleKeyPress(code);
         }
+
     }
 
     @Override
